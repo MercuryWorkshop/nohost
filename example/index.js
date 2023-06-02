@@ -1,6 +1,6 @@
 /* eslint no-console:0 */
 
-import { Workbox } from 'https://storage.googleapis.com/workbox-cdn/releases/4.0.0/workbox-window.prod.mjs';
+import { Workbox } from '/assets/libs/workbox/workbox-window.prod.mjs';
 
 function serverReady() {
   console.log('Server ready! use `window.Filer.fs if you need an fs');

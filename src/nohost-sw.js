@@ -5,7 +5,7 @@ const { debug, route } = require('./config');
 
 /* global workbox */
 // TODO: include this via package.json
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/4.1.1/workbox-sw.js');
+importScripts('/assets/libs/workbox/workbox-sw.js');
 
 workbox.setConfig({ debug, modulePathPrefix: "/assets/libs/workbox" });
 
