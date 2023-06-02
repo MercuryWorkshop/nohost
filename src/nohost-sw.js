@@ -7,7 +7,7 @@ const { debug, route } = require('./config');
 // TODO: include this via package.json
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/4.1.1/workbox-sw.js');
 
-workbox.setConfig({ debug });
+workbox.setConfig({ debug, modulePathPrefix: "/assets/libs/workbox" });
 
 // Route with trailing slash (i.e., /path/into/filesystem)
 const wwwRegex = new RegExp(`${route}(/.*)`);
