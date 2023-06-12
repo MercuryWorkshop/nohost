@@ -4,5 +4,3 @@ node_modules
 .env
 
 dist/*
-!dist/nohost-sw.js
-!dist/nohost-sw.map
