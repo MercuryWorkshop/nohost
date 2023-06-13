@@ -13,7 +13,7 @@
   "scripts": {
     "eslint": "eslint src example",
     "test": "npm run eslint",
-    "build-example": "cp -r example/* dist",
+    "build-example": "mkdir -p dist/; cp -r example/* dist",
     "build-sw": "parcel build src/nohost-sw.js --detailed-report",
     "prebuild": "npm run build-example",
     "build": "npm run build-sw",
