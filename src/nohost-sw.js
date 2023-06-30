@@ -51,50 +51,56 @@ workbox.routing.registerRoute(
   },
   'GET'
 );
-workbox.routing.registerRoute(
-  /.*/,
-  ({ url }) => {
-    if (url.pathname === "/") {
-      url.pathname = "/index.html";
-    }
-    const basepath = "/anura_files";
-
-    let sh = new fs.Shell();
-
-
-
-
-    // this is more annoying than it needs to be because this uses an old-ass compiler which doesn't like promises
-    let path = decodeURI(url.pathname);
-    let localreq = serve(`${basepath}${path}`, htmlFormatter, false);
-    return new Promise(resolve => {
-      localreq.then(r => {
-        if (r.ok) {
-          resolve(r);
-        } else {
-
-          fetch(url).then(f => {
-            resolve(f);
-            if (f.ok) {
-              let cl = f.clone();
-              cl.arrayBuffer().then(b => {
-                sh.mkdirp(`${basepath}${path.replace(/[^/]*$/g, "")}`, () => {
-                  fs.writeFile(`${basepath}${path}`, Buffer(b));
+function regCache() {
+  workbox.routing.registerRoute(
+    /.*/,
+    ({ url }) => {
+      if (url.pathname === "/") {
+        url.pathname = "/index.html";
+      }
+      const basepath = "/anura_files";
+      let sh = new fs.Shell();
+      // this is more annoying than it needs to be because this uses an old-ass compiler which doesn't like promises
+      let path = decodeURI(url.pathname);
+      let localreq = serve(`${basepath}${path}`, htmlFormatter, false);
+      return new Promise(resolve => {
+        localreq.then(r => {
+          if (r.ok) {
+            resolve(r);
+          } else {
+            fetch(url).then(f => {
+              resolve(f);
+              if (f.ok) {
+                let cl = f.clone();
+                cl.arrayBuffer().then(b => {
+                  sh.mkdirp(`${basepath}${path.replace(/[^/]*$/g, "")}`, () => {
+                    fs.writeFile(`${basepath}${path}`, Buffer(b));
+                  });
                 });
-              });
-            }
-          }).catch(a => {
-            console.error(`Could not fetch?`);
-          });
-        }
-
+              }
+            }).catch(a => {
+              console.error(`Could not fetch? ${a}`);
+            });
+          }
+        });
       });
+    },
+    'GET'
+  );
+}
+let done = false;
+addEventListener("message", event => {
+  if (done) return;
+  if (event.data.value) {
+    regCache();
+  }
+  self.clients.matchAll().then(clients => {
+    clients.forEach(client => {
+      done = true;
+      client.postMessage({ anura_target: "anura.settings.set", id: 1, prop: "use-sw-cache" });
     });
-
-
-  },
-  'GET'
-);
+  });
+});
 
 workbox.core.skipWaiting();
 workbox.core.clientsClaim();
