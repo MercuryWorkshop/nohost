@@ -90,10 +90,10 @@ function regCache() {
 }
 let done = false;
 addEventListener("message", event => {
-  if (done) return;
   if (event.data.value) {
     regCache();
   }
+  if (done) return;
   self.clients.matchAll().then(clients => {
     clients.forEach(client => {
       done = true;
