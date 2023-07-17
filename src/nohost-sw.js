@@ -90,16 +90,23 @@ function regCache() {
 }
 let done = false;
 addEventListener("message", event => {
-  if (event.data.value) {
+  console.log("Recieved Message")
+  console.log(event)
+  if (event.data.anuraMsg && event.data.anuraMsg.value) {
     regCache();
   }
   if (done) return;
-  self.clients.matchAll().then(clients => {
-    clients.forEach(client => {
-      done = true;
-      client.postMessage({ anura_target: "anura.settings.set", id: 1, prop: "use-sw-cache" });
+  console.log("Starting request for anura settings")
+  if (event.data.anuraMsg === "readyToGetSettings") {
+    self.clients.matchAll().then(clients => {
+      clients.forEach(client => {
+        done = true;
+        console.log("Posting Message")
+        client.postMessage({ anura_target: "anura.settings.set", id: 1, prop: "use-sw-cache" });
+      });
     });
-  });
+  }
+
 });
 
 workbox.core.skipWaiting();
