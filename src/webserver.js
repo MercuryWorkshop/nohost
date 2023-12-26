@@ -37,8 +37,11 @@ const serve = function(path, formatter, download) {
           responseData.config.headers['Content-Disposition'] =
             formatContentDisposition(path, stats);
         }
-        if (crossOriginIsolated) {
+        if (true) {
           responseData.config.headers["Cross-Origin-Embedder-Policy"] = "require-corp"
+          responseData.config.headers["Access-Control-Allow-Origin"]  = "*"
+          responseData.config.headers["Cross-Origin-Opener-Policy"] = "same-origin"
+          responseData.config.headers["Cross-Origin-Resource-Policy"] = "same-site"
         }
         
 
